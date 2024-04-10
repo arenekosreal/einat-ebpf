@@ -1,0 +1,46 @@
+#!/bin/sh /etc/rc.common
+
+START=80
+STOP=20
+
+USE_PROCD=1
+
+APP=einat
+# TODO: Migrate to UCI config
+UCI_MANAGED_CONFIG=0
+
+
+#_generate_config_from_uci $confpath
+_generate_config_from_uci() {
+    false
+}
+
+start_service() {
+
+    if [ "$UCI_MANAGED_CONFIG" = "1" ]
+    then
+        echo "Generating config file from UCI config..."
+        _generate_config_from_uci /var/run/$APP/config.toml
+    elif [ -f /etc/$APP.toml ]
+    then
+        echo "Using existing config in /etc/$APP.toml..."
+        ln -sf /etc/$APP.toml /var/run/$APP/config.toml
+    else
+        echo "WARN: Using an empty config file!"
+        touch /var/run/$APP/config.toml
+    fi
+
+    procd_open_instance $APP
+    procd_set_param command /usr/bin/$APP
+    procd_append_param command --config /var/run/$APP/config.toml
+
+    procd_add_jail $APP log requirejail
+    procd_set_param user $APP
+    # TODO: Maybe CAP_BPF instead CAP_SYS_ADMIN?
+    procd_set_param capabilities /etc/capabilities/$APP.json
+    procd_set_param stdout 1
+    procd_set_param stderr 1
+    procd_set_param no_new_privs 1
+
+    procd_close_instance
+}

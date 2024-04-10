@@ -1,0 +1,10 @@
+	menu "Features Configuration"
+		depends on PACKAGE_einat-ebpf
+		config EINAT_EBPF_IPV6
+			bool "Enable IPV6 feature"
+			help
+				Enable IPv6 NAT66 feature with this option,
+				however it would increase load time of eBPF
+				programs to about 4 times.
+			default n
+	endmenu
