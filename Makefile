@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=einat-ebpf
 PKG_VERSION:=0.1.1
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/EHfive/$(PKG_NAME)/tar.gz/refs/tags/v$(PKG_VERSION)?
@@ -28,7 +28,7 @@ define Package/einat-ebpf
 	PROVIDES:=einat
 	CATEGORY:=Network
 	SUBMENU:=Routing and Redirection
-	DEPENDS:=$(RUST_ARCH_DEPENDS) $(KERNEL_DEPENDS) $(BPF_DEPENDS) +libelf1 +zlib
+	DEPENDS:=$(RUST_ARCH_DEPENDS) $(KERNEL_DEPENDS) $(BPF_DEPENDS) +libelf +zlib
 	TITLE:=eBPF-based Endpoint-Independent NAT
 	URL:=https://github.com/EHfive/einat-ebpf
 	USERID:=einat:einat
