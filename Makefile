@@ -20,6 +20,11 @@ include $(INCLUDE_DIR)/bpf.mk
 #include ../../lang/rust/rust-package.mk
 include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk
 
+ifneq ($(CONFIG_USE_LLVM_HOST),y)
+	CARGO_PKG_VARS+= \
+		LIBCLANG_PATH=$(LLVM_PATH)/../lib
+endif
+
 KERNEL_DEPENDS:= \
 	+@KERNEL_DEBUG_INFO_BTF \
 	+kmod-sched-bpf
